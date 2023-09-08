@@ -1,4 +1,5 @@
-import { _decorator, Component, Vec3, input, Input, EventKeyboard, KeyCode,Prefab,instantiate } from 'cc';
+import { _decorator, Component, Vec3, input, Input, EventKeyboard, KeyCode,Prefab,instantiate, builtinResMgr } from 'cc';
+import { BulletController } from './BulletController';
 const { ccclass, property } = _decorator;
 
 @ccclass('PlayerController')
@@ -63,6 +64,7 @@ export class PlayerController extends Component {
 
     attack(){
         var bulletNode = instantiate(this.bulletPrefab)
+        bulletNode.addComponent("BulletController")
         bulletNode.setPosition(this.node.getPosition())
         this.node.parent.addChild(bulletNode)
         console.log("attack !!!")
