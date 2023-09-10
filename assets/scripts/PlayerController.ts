@@ -1,4 +1,4 @@
-import { _decorator, Component, Vec3, input, Input, EventKeyboard, KeyCode,Prefab,instantiate, builtinResMgr } from 'cc';
+import { _decorator, Component, Vec3, input, Input, EventKeyboard, KeyCode,Prefab,instantiate, game, Script } from 'cc';
 import { BulletController } from './BulletController';
 const { ccclass, property } = _decorator;
 
@@ -22,17 +22,19 @@ export class PlayerController extends Component {
 
     private _speed: number = 50;
 
+    protected onLoad(): void {
+        game.frameRate = 30
+    }
+
     start() {
         input.on(Input.EventType.KEY_DOWN, this.onKeyDown, this);
         input.on(Input.EventType.KEY_UP, this.onKeyUp, this);
     }
 
     update(deltaTime: number) {
-        this.node.getPosition(this._curPos)
+        this.node.getParent().getPosition(this._curPos)
         Vec3.add(this._targetPos, this._curPos, new Vec3(this._horizontal * deltaTime * this._speed, this._vertical * deltaTime * this._speed, 0));
-
-
-        this.node.setPosition(this._targetPos);
+        this.node.getParent().setPosition(this._targetPos)
     }
 
     onKeyUp(event: EventKeyboard) {
@@ -65,8 +67,8 @@ export class PlayerController extends Component {
     attack(){
         var bulletNode = instantiate(this.bulletPrefab)
         bulletNode.addComponent("BulletController")
-        bulletNode.setPosition(this.node.getPosition())
-        this.node.parent.addChild(bulletNode)
+        bulletNode.setPosition(this.node.getParent().getPosition())
+        this.node.getParent().getParent().addChild(bulletNode)
         console.log("attack !!!")
     }
 }
